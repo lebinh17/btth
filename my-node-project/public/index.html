@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Đăng ký Môn học - STUDENTREG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>HỆ THỐNG ĐĂNG KÝ MÔN HỌC</h1>
+            <p>Quản lý thông tin Sinh viên và Đăng ký học phần - CRUD SQL Demo</p>
+        </header>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard-grid">
+            
+            <!-- Left: Students Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Danh sách Sinh viên</div>
+                    <button class="btn btn-primary btn-sm" id="btn-add-student">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Thêm Sinh viên
+                    </button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 10%">MSSV (SID)</th>
+                                <th style="width: 30%">Họ và Tên</th>
+                                <th style="width: 15%">Giới tính</th>
+                                <th style="width: 20%">Ngày sinh</th>
+                                <th style="width: 25%">Ngành học</th>
+                                <th style="width: 20%">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-table-body">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right: Enrollments Panel -->
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">Học phần đã đăng ký</div>
+                    <button class="btn btn-primary btn-sm" id="btn-add-enrollment">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        Đăng ký học
+                    </button>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sinh viên</th>
+                                <th>Môn học</th>
+                                <th>Tín chỉ</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="enrollments-table-body">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 1. Modal Add/Edit Student -->
+    <div class="modal-backdrop" id="student-modal-backup">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" id="student-modal-title">Thêm Sinh viên mới</div>
+                <button class="modal-close" id="student-modal-close">&times;</button>
+            </div>
+            <form id="student-form">
+                <input type="hidden" id="student-id">
+                <div class="form-group">
+                    <label class="form-label" for="student-name">Họ và Tên</label>
+                    <input type="text" class="form-control" id="student-name" required placeholder="Nhập họ tên sinh viên...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="student-gender">Giới tính</label>
+                    <select class="form-control" id="student-gender">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="student-birthday">Ngày sinh</label>
+                    <input type="date" class="form-control" id="student-birthday" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="student-major">Ngành học</label>
+                    <input type="text" class="form-control" id="student-major" placeholder="Ví dụ: Công nghệ thông tin..." required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="student-modal-cancel">Hủy</button>
+                    <button type="submit" class="btn btn-primary" id="student-modal-submit">Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Modal Add Enrollment -->
+    <div class="modal-backdrop" id="enrollment-modal-backup">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Đăng ký Môn học</div>
+                <button class="modal-close" id="enrollment-modal-close">&times;</button>
+            </div>
+            <form id="enrollment-form">
+                <div class="form-group">
+                    <label class="form-label" for="enrollment-student">Sinh viên</label>
+                    <select class="form-control" id="enrollment-student" required>
+                        <option value="">-- Chọn sinh viên --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="enrollment-module">Môn học / Học phần</label>
+                    <select class="form-control" id="enrollment-module" required>
+                        <option value="">-- Chọn học phần --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="enrollment-date">Ngày đăng ký</label>
+                    <input type="date" class="form-control" id="enrollment-date" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="enrollment-modal-cancel">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. Modal Edit Enrollment (Update Enrollment Course) -->
+    <div class="modal-backdrop" id="edit-enrollment-modal-backup">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Thay đổi học phần đăng ký</div>
+                <button class="modal-close" id="edit-enrollment-modal-close">&times;</button>
+            </div>
+            <form id="edit-enrollment-form">
+                <input type="hidden" id="edit-enroll-sid">
+                <input type="hidden" id="edit-enroll-old-mid">
+                <div class="form-group">
+                    <label class="form-label">Sinh viên</label>
+                    <input type="text" class="form-control" id="edit-enroll-student-name" readonly style="background: rgba(255,255,255,0.05); color: var(--text-secondary);">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="edit-enrollment-new-module">Học phần mới</label>
+                    <select class="form-control" id="edit-enrollment-new-module" required>
+                        <!-- Loaded dynamically via JS -->
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="edit-enrollment-modal-cancel">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
