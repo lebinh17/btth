@@ -6,34 +6,39 @@ Dự án này là ứng dụng web quản lý Sinh viên đăng ký môn học (
 
 ## 1. Kiến Trúc và Các Thành Phần Của Dự Án
 
-Dự án được tổ chức trong thư mục [`my-node-project`](file:///c:/Users/Binh/New%20folder/btth/my-node-project) bao gồm các tệp tin sau:
+Dự án được tổ chức trong thư mục [`my-node-project`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project) bao gồm các tệp tin sau:
 
-- **[`my-node-project/STUDENTREG.sql`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/STUDENTREG.sql)**: Chứa định nghĩa schema cho 3 bảng quan hệ: `STUDENT` (Sinh viên), `MODULE` (Học phần), và `STUDENT_ENROLEMENT` (Đăng ký học), cùng dữ liệu mẫu ban đầu.
-- **[`my-node-project/init_db.js`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/init_db.js)**: Script khởi tạo cơ sở dữ liệu SQLite (`studentreg.db`) từ tệp tin SQL gốc.
-- **[`my-node-project/db.js`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/db.js)**: Chứa các hàm dùng chung để kết nối CSDL và thực thi câu lệnh SQL (`query`, `commitQuery`, `endConnection`) dưới dạng Promise.
-- **[`my-node-project/index.js`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/index.js)**: Express Server cung cấp các API endpoint thực hiện CRUD và phục vụ thư mục frontend tĩnh.
-- **Thư mục [`my-node-project/public`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/public)**: Giao diện Web tương tác cao cấp (Dark Mode, Glassmorphism, Responsive và Toast Notification).
+- **[`my-node-project/STUDENTREG.sql`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/STUDENTREG.sql)**: Chứa định nghĩa schema cho 3 bảng quan hệ: `STUDENT` (Sinh viên), `MODULE` (Học phần), và `STUDENT_ENROLEMENT` (Đăng ký học), cùng dữ liệu mẫu ban đầu.
+- **[`my-node-project/init_db.js`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/init_db.js)**: Script khởi tạo cơ sở dữ liệu SQLite (`studentreg.db`) từ tệp tin SQL gốc.
+- **[`my-node-project/db.js`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/db.js)**: Chứa các hàm dùng chung để kết nối CSDL và thực thi câu lệnh SQL (`query`, `commitQuery`, `endConnection`) dưới dạng Promise.
+- **[`my-node-project/index.js`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/index.js)**: Express Server cung cấp các API endpoint thực hiện CRUD và phục vụ thư mục frontend tĩnh.
+- **Thư mục [`my-node-project/public`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/public)**: Giao diện Web tương tác cao cấp (Dark Mode, Glassmorphism, Responsive và Toast Notification).
 
 ---
 
 ## 2. Hướng Dẫn Cài Đặt và Khởi Chạy
 
-Do môi trường chạy Node.js nằm tại đường dẫn tùy chỉnh trong hệ thống của bạn, hãy sử dụng các lệnh dưới đây trong PowerShell/Command Prompt:
+Sử dụng Terminal / PowerShell / Command Prompt tại thư mục dự án:
 
 ### Bước 1: Di chuyển vào thư mục dự án
 ```powershell
-cd "c:\Users\Binh\New folder\btth\my-node-project"
+cd my-node-project
 ```
 
-### Bước 2: Khởi tạo cơ sở dữ liệu
+### Bước 2: Cài đặt các gói phụ thuộc (nếu chưa cài)
+```bash
+npm install
+```
+
+### Bước 3: Khởi tạo cơ sở dữ liệu
 Lệnh này sẽ tạo ra tệp cơ sở dữ liệu `studentreg.db` và nạp dữ liệu mẫu ban đầu từ file `STUDENTREG.sql`.
-```powershell
-& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VisualStudio\NodeJs\node.exe" init_db.js
+```bash
+npm run init-db
 ```
 
-### Bước 3: Khởi động máy chủ Express
-```powershell
-& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VisualStudio\NodeJs\node.exe" index.js
+### Bước 4: Khởi động máy chủ Express
+```bash
+npm start
 ```
 
 Khi màn hình hiển thị `Express server running on http://localhost:3000`, hãy mở trình duyệt và truy cập [**http://localhost:3000**](http://localhost:3000) để trải nghiệm giao diện.
@@ -42,7 +47,7 @@ Khi màn hình hiển thị `Express server running on http://localhost:3000`, h
 
 ## 3. Mã Nguồn CRUD Thực Hiện Trong Dự Án (Dành Cho Ảnh Chụp Màn Hình Code)
 
-### A. Kết nối CSDL chung ([`db.js`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/db.js))
+### A. Kết nối CSDL chung ([`db.js`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/db.js))
 Được viết dưới dạng Promise để hỗ trợ bất đồng bộ `async/await` hoặc `.then().catch()` mượt mà:
 ```javascript
 const sqlite3 = require('sqlite3').verbose();
@@ -58,7 +63,7 @@ const query = (sql, params = []) => {
 };
 ```
 
-### B. Router CRUD trên Express Backend ([`index.js`](file:///c:/Users/Binh/New%20folder/btth/my-node-project/index.js))
+### B. Router CRUD trên Express Backend ([`index.js`](file:///c:/Users/Binh/Downloads/btth/btth/my-node-project/index.js))
 
 - **CREATE (Thêm học phần đăng ký mới):**
   ```javascript

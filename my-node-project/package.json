@@ -1,12 +1,19 @@
 {
   "name": "my-node-project",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hệ thống Quản lý Đăng ký Môn học (STUDENTREG) - Node.js, Express & SQLite",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "init-db": "node init_db.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "nodejs",
+    "express",
+    "sqlite3",
+    "crud"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
